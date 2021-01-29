@@ -63,7 +63,7 @@ After finishing your required elements, you can push your work further. These go
 
 ## Submission format
 
-Submit via Codegrade. Remember to add a query string to your Webhook's Payload URL specifying your `<firstName-lastName>` branch:
+Submit via Codegrade. Remember to add a query string to your Webhook's Payload URL specifying your `<firstName-lastName>` branch:f
 
 ```
   https://example.com/example?branch=jane-doe
