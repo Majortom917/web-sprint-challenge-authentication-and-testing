@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
     }
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
       if(err){
-        return res.status(401),json({message: 'token invalid'})
+        return res.status(401).json({message: 'token invalid'})
       }
       req.token = decoded
       next()
