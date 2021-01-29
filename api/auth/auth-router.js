@@ -1,7 +1,30 @@
 const router = require('express').Router();
+const bcrypt = require("bcryptjs");
+const Users = require("./auth-model");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
-router.post('/register', (req, res) => {
+router.post('/register', async(req, res) => {
   res.end('implement register, please!');
+  try{
+    const {username, password} = req.body
+    const user = await Users.findBy({username}).first()
+      if(user){
+        return res.status(409).json({message: 'user already exists'})
+      }
+      if(!username || !password){
+        return res.status(409).json({ message: 'username and password required'})
+      }
+      const newUser = await Users.add({
+        username, 
+        password: await bcrypt.hash(password, 13)
+      })
+      res.status(201).json(newUser)
+    
+  }catch(err){
+    next(err)
+  }
+})
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -26,7 +49,7 @@ router.post('/register', (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-});
+
 
 router.post('/login', (req, res) => {
   res.end('implement login, please!');
