@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
 router.post('/register', async(req, res) => {
-  res.end('implement register, please!');
+  //res.end('implement register, please!');
   try{
     const {username, password} = req.body
     const user = await Users.findBy({username}).first()
@@ -51,8 +51,26 @@ router.post('/register', async(req, res) => {
   */
 
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', async (req, res, next) => {
+  //res.end('implement login, please!');
+  try{
+    const {username, password} = req.body
+    if(!username || !password){
+      return res.status(401).json({message: 'username and password required'})
+    }
+    const user = await Users.findBy({username}).first()
+    const passwordValid = await bcrypt.compare(password, user.password)
+    if(!user || !passwordValid){
+      return res.status(401).json({message: 'this is not the droid I am looking for'})
+    }
+    const token = jwt.sign({id: user.id}, process.env.JWT_SECRET)
+    res.json({
+      message: `welcome, ${user.username}`,
+      token:token
+    })
+  } catch(err){
+    next(err)
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
